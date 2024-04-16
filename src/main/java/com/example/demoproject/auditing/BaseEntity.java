@@ -16,9 +16,9 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 @Data
+@EntityListeners(AuditingEntityListener.class)
+@MappedSuperclass
 @AllArgsConstructor
 @NoArgsConstructor
 public class BaseEntity {

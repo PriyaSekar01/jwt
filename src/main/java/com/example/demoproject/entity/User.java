@@ -4,12 +4,13 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.demoproject.auditing.AutidingWithBAseEntity;
+import com.example.demoproject.auditing.BaseEntity;
 import com.example.demoproject.enumeration.UserType;
 
 import jakarta.persistence.Column;
@@ -19,82 +20,70 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Table(name="user")
-public class User implements UserDetails,Serializable {
-	
-	/**
-	 * 
-	 */
-	@Serial
-	private static final long serialVersionUID = 1L;
+public class User extends BaseEntity implements UserDetails, Serializable {
 
-	private UUID id;
-	
-	@Column(name="first_name")
-	private String firstName;
-	
-	
-	@Column(name="last_name")
-	private String lastName;
-	
-	@Column(name="email")
-	private String email;
-	
-	@Column(name="password")
-	private String password;
-	
-	@Column(name="conf_password")
-	private String confirmPassword;
-	
-	@Column(name="user_type")
-	@Enumerated(EnumType.STRING)
-	private UserType userType;
-	
-	
-//	private Role role;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
+    @Column(name = "username")
+    private String userName;
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority(userType.name()));
-	}
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
 
+    @Column(name = "password", nullable = false)
+    private String password;
 
-	@Override
-	public String getUsername() {
-		return email;
-	}
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_type")
+    private UserType userType;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(userType.name()));
+    }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
+    @Override
+    public String getUsername() {
+        return email;  // Use email as username
+    }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
 }
